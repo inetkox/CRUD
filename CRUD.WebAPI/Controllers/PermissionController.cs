@@ -1,7 +1,6 @@
-﻿using CRUD.WebAPI.Data;
+﻿using CRUD.WebAPI.Interfaces;
 using CRUD.WebAPI.Privilages;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CRUD.WebAPI.Controllers
 {
@@ -9,94 +8,48 @@ namespace CRUD.WebAPI.Controllers
     [ApiController]
     public class PermissionController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
+        private IPermissionRepository permissionRepository;
 
-        public PermissionController(ApplicationDbContext context)
+        public PermissionController(IPermissionRepository permissionRepository)
         {
-            this.context = context;
+            this.permissionRepository = permissionRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Permission>>> Get(int roleId)
+        public IEnumerable<Permission> GetAllPermissions()
         {
-            var permission = await context.Permissions
-                .Where(x => x.RoleId == roleId)
-                .ToListAsync();
+            return permissionRepository.GetPermissions();
+        }
 
-            return permission;
+        [HttpGet("{id}")]
+        public Permission Get(Guid id)
+        {
+            return permissionRepository.GetPermissionById(id);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Permission>>> Create(PermissionDefault permissionDefault)
+        public Permission Create(Permission permission)
         {
-            var role = await context.Roles.FindAsync(permissionDefault.RoleId);
-            if (User == null)
-                return NotFound();
-
-            var newPermission = new Permission
-            {
-                PermissionName = permissionDefault.PermissionName,
-                PermissionDescription = permissionDefault.PermissionDescription,
-                Role = role,
-            };
-
-            context.Permissions.Add(newPermission);
-            await context.SaveChangesAsync();
-
-            return await Get(newPermission.RoleId);
+            permissionRepository.CreatePermission(permission);
+            permissionRepository.Save();
+            return permissionRepository.GetPermissionById(permission.Id);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Permission permission)
+        public Permission Update(Guid id, Permission permission)
         {
-            if (id != permission.Id)
-            {
-                return BadRequest();
-            }
 
-            context.Entry(permission).State = EntityState.Modified;
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PermissionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            permissionRepository.UpdatePermission(id, permission);
+            permissionRepository.Save();
+            return permissionRepository.GetPermissionById(permission.Id);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Permission>>> Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            if (context.Permissions == null)
-            {
-                return NotFound();
-            }
-            var permission = await context.Permissions.FindAsync(id);
-            if (permission == null)
-            {
-                return NotFound();
-            }
-
-            context.Permissions.Remove(permission);
-            await context.SaveChangesAsync();
-
+            permissionRepository.DeletePermission(id);
+            permissionRepository.Save();
             return NoContent();
-        }
-
-        private bool PermissionExists(int id)
-        {
-            return (context.Permissions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
