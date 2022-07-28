@@ -53,7 +53,7 @@ namespace IntegrationTest
             Assert.Equal(HttpStatusCode.NoContent, remove.StatusCode);
         }
 
-        [Fact(Skip = "Put not working")]
+/*        [Fact(Skip = "Put not working")]
         public async Task UpdateRole()
         {
             var newRole = NewRole();
@@ -67,7 +67,7 @@ namespace IntegrationTest
 
             var secondRole = new Role
             {
-                Id = Convert.ToInt32(content[7].ToString()),
+                Guid = Convert.ToInt32(content[7].ToString()),
                 RoleName = "Admin"
             };
             var secondPostJson = JsonConvert.SerializeObject(secondRole);
@@ -77,7 +77,7 @@ namespace IntegrationTest
             var contentAfterUpdate = await update.Content.ReadAsStringAsync();
             Assert.Empty(contentAfterUpdate);
             Assert.Equal(HttpStatusCode.NoContent, update.StatusCode);
-        }
+        }*/
 
         private Role NewRole()
         {
