@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUD.WebAPI", "CRUD.WebAPI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "..\IntegrationTest\IntegrationTest.csproj", "{6E948C2F-EAD7-4205-B2B8-2B22F918ED4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "..\UnitTest\UnitTest.csproj", "{FA684700-EBEF-4772-AA8C-50E9DE688C24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6E948C2F-EAD7-4205-B2B8-2B22F918ED4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E948C2F-EAD7-4205-B2B8-2B22F918ED4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E948C2F-EAD7-4205-B2B8-2B22F918ED4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA684700-EBEF-4772-AA8C-50E9DE688C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA684700-EBEF-4772-AA8C-50E9DE688C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA684700-EBEF-4772-AA8C-50E9DE688C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA684700-EBEF-4772-AA8C-50E9DE688C24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
