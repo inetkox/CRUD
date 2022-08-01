@@ -4,64 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRUD.WebAPI.Interfaces
 {
-    public class PermissionRepository : IPermissionRepository, IDisposable
+    public class PermissionRepository : GenericRepository<Permission>, IPermissionRepository
     {
-        private readonly ApplicationDbContext context;
+        private readonly DbSet<Permission> permissions;
 
-        public PermissionRepository(ApplicationDbContext context)
+        public PermissionRepository(ApplicationDbContext context, ICacheRepository cacheRepository) : base(context, cacheRepository)
         {
-            this.context = context;
-        }
-
-        public void CreatePermission(Permission permission)
-        {
-            context.Permissions.Add(permission);
-        }
-
-        public void DeletePermission(Guid id)
-        {
-            Permission? permission = context.Permissions.Find(id);
-            context.Permissions.Remove(permission);
-        }
-
-        public Permission GetPermissionById(Guid id)
-        {
-            return context.Permissions.Find(id);
-        }
-
-        public IEnumerable<Permission> GetPermissions()
-        {
-            return context.Permissions.ToList();
-        }
-
-        public void UpdatePermission(Guid id, Permission permission)
-        {
-            context.Entry(permission).State = EntityState.Modified;
-        }
-
-        public void Save()
-        {
-            context.SaveChanges();
-        }
-
-        private bool disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            permissions = context.Set<Permission>();
         }
     }
 }
+

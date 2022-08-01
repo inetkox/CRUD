@@ -2,13 +2,8 @@
 
 namespace CRUD.WebAPI.Interfaces
 {
-    public interface IPermissionRepository : IDisposable
+    public interface IPermissionRepository : IGenericRepository<Permission>
     {
-        IEnumerable<Permission> GetPermissions();
-        Permission GetPermissionById(Guid id);
-        void CreatePermission(Permission permission);
-        void DeletePermission(Guid id);
-        void UpdatePermission(Guid id, Permission permission);
-        void Save();
+
     }
 }

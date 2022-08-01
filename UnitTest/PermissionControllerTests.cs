@@ -16,24 +16,6 @@ namespace UnitTest
         }
 
         [Fact]
-        public async Task GetPermissionById_Should_Return_Not_Null()
-        {
-            //Arrange
-            var permission = new Permission
-            {
-                Id = GenerateSeededGuid(5),
-                PermissionName = "Admin",
-                PermissionDescription = "Has access everywhere"
-            };
-
-            //Act
-            _permissionController.Create(permission).Returns(await Task.FromResult(permission));
-            var result = _permissionRepository.GetPermissionById(GenerateSeededGuid(5));
-            //Assert
-            Assert.NotNull(result);
-        }
-
-        [Fact]
         public async Task GetAllPermissions_Should_Return_Correct_Permissions()
         {
             //Arrange
@@ -53,10 +35,10 @@ namespace UnitTest
                 }
             };
             var mockRepo = new Mock<IPermissionRepository>();
-            mockRepo.Setup(repo => repo.GetPermissions()).Returns(await Task.FromResult<IEnumerable<Permission>>(permissionLists));
+            mockRepo.Setup(repo => repo.GetAllAsync()).ReturnsAsync(permissionLists);
             //Act
             var controller = new PermissionController(mockRepo.Object);
-            var result = controller.GetAllPermissions();
+            var result = await controller.GetAllPermissions();
             //Assert
             Assert.Equal(permissionLists, result);
         }
@@ -72,12 +54,12 @@ namespace UnitTest
                 PermissionDescription = "Has access everywhere"
             };
             var mockRepo = new Mock<IPermissionRepository>();
-            mockRepo.Setup(repo => repo.GetPermissionById(GenerateSeededGuid(5))).Returns(await Task.FromResult(permission));
+            mockRepo.Setup(repo => repo.GetByIdAsync(GenerateSeededGuid(5))).ReturnsAsync(permission);
             //Act
             var controller = new PermissionController(mockRepo.Object);
-            var result = controller.Get(GenerateSeededGuid(5));
+            var result = await controller.Get(GenerateSeededGuid(5));
             //Assert
-            Assert.Equal(permission, result);
+            Assert.Equal(permission, result.Value);
         }
 
         public static Guid GenerateSeededGuid(int seed)

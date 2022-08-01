@@ -16,39 +16,53 @@ namespace CRUD.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Role> GetAllRoles()
+        public async Task<IReadOnlyList<Role>> GetAllRoles()
         {
-            return roleRepository.GetRoles();
+            return await roleRepository.GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public Role Get(Guid id)
+        public async Task<ActionResult<Role>> Get(Guid id)
         {
-            return roleRepository.GetRoleById(id);
+            var role = await roleRepository.GetByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            return role;
         }
 
-        [HttpPost]  
-        public Role Create(Role role)
+        [HttpPost]
+        public async Task<ActionResult<Role>> Create(Role role)
         {
-            roleRepository.CreateRole(role);
-            roleRepository.Save();
-            return roleRepository.GetRoleById(role.Id);
+            await roleRepository.CreateAsync(role);
+            return CreatedAtAction("Get", new { id = role.Id }, role);
         }
 
         [HttpPut("{id}")]
-        public Role Update(Guid id, Role role)
+        public async Task<ActionResult> Update(Guid id, Role role)
         {
-            roleRepository.UpdateRole(id, role);
-            roleRepository.Save();
-            return roleRepository.GetRoleById(role.Id);
+            if (id != role.Id)
+            {
+                return BadRequest();
+            }
+
+            await roleRepository.UpdateAsync(role);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult<Role>> Delete(Guid id)
         {
-            roleRepository.DeleteRole(id);
-            roleRepository.Save();
-            return NoContent();
+            var role = await roleRepository.GetByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            await roleRepository.DeleteAsync(role);
+            return role;
         }
     }
 }

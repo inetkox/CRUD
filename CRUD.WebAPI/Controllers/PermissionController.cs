@@ -16,40 +16,53 @@ namespace CRUD.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Permission> GetAllPermissions()
+        public async Task<IReadOnlyList<Permission>> GetAllPermissions()
         {
-            return permissionRepository.GetPermissions();
+            return await permissionRepository.GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public Permission Get(Guid id)
+        public async Task<ActionResult<Permission>> Get(Guid id)
         {
-            return permissionRepository.GetPermissionById(id);
+            var permission = await permissionRepository.GetByIdAsync(id);
+            if (permission == null)
+            {
+                return NotFound();
+            }
+
+            return permission;
         }
 
         [HttpPost]
-        public Permission Create(Permission permission)
+        public async Task<ActionResult<Permission>> Create(Permission permission)
         {
-            permissionRepository.CreatePermission(permission);
-            permissionRepository.Save();
-            return permissionRepository.GetPermissionById(permission.Id);
+            await permissionRepository.CreateAsync(permission);
+            return CreatedAtAction("Get", new { id = permission.Id }, permission);
         }
 
         [HttpPut("{id}")]
-        public Permission Update(Guid id, Permission permission)
+        public async Task<ActionResult> Update(Guid id, Permission permission)
         {
+            if (id != permission.Id)
+            {
+                return BadRequest();
+            }
 
-            permissionRepository.UpdatePermission(id, permission);
-            permissionRepository.Save();
-            return permissionRepository.GetPermissionById(permission.Id);
+            await permissionRepository.UpdateAsync(permission);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult<Permission>> Delete(Guid id)
         {
-            permissionRepository.DeletePermission(id);
-            permissionRepository.Save();
-            return NoContent();
+            var permission = await permissionRepository.GetByIdAsync(id);
+            if (permission == null)
+            {
+                return NotFound();
+            }
+
+            await permissionRepository.DeleteAsync(permission);
+            return permission;
         }
     }
 }
