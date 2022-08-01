@@ -10,26 +10,10 @@ namespace UnitTest
     {
         private readonly RoleController _roleController;
         private readonly IRoleRepository _roleRepository = Substitute.For<IRoleRepository>();
+
         public RoleControllerTests()
         {
             _roleController = new RoleController(_roleRepository);
-        }
-
-        [Fact]
-        public async Task GetRoleById_Should_Return_Not_Null()
-        {
-            //Arrange
-            var role = new Role
-            {
-                Id = GenerateSeededGuid(5),
-                RoleName = "Admin"
-            };
-
-            //Act
-            _roleController.Create(role).Returns(await Task.FromResult(role));
-            var result = _roleRepository.GetRoleById(GenerateSeededGuid(5));
-            //Assert
-            Assert.NotNull(result);
         }
 
         [Fact]
@@ -50,10 +34,10 @@ namespace UnitTest
                 }
             };
             var mockRepo = new Mock<IRoleRepository>();
-            mockRepo.Setup(repo => repo.GetRoles()).Returns(await Task.FromResult<IEnumerable<Role>>(roleLists));
+            mockRepo.Setup(repo => repo.GetAllAsync()).ReturnsAsync(roleLists);
             //Act
             var controller = new RoleController(mockRepo.Object);
-            var result = controller.GetAllRoles();
+            var result = await controller.GetAllRoles();
             //Assert
             Assert.Equal(roleLists, result);
         }
@@ -68,12 +52,12 @@ namespace UnitTest
                 RoleName = "Admin"
             };
             var mockRepo = new Mock<IRoleRepository>();
-            mockRepo.Setup(repo => repo.GetRoleById(GenerateSeededGuid(5))).Returns(await Task.FromResult(role));
+            mockRepo.Setup(repo => repo.GetByIdAsync(GenerateSeededGuid(5))).ReturnsAsync(role);
             //Act
             var controller = new RoleController(mockRepo.Object);
-            var result = controller.Get(GenerateSeededGuid(5));
+            var result = await controller.Get(GenerateSeededGuid(5));
             //Assert
-            Assert.Equal(role, result);
+            Assert.Equal(role, result.Value);
         }
 
         public static Guid GenerateSeededGuid(int seed)
