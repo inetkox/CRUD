@@ -40,7 +40,6 @@ namespace UnitTest
             var r = new Random(seed);
             var guid = new byte[16];
             r.NextBytes(guid);
-
             return new Guid(guid);
         }
     }
