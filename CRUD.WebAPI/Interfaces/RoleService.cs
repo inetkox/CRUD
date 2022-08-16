@@ -14,13 +14,9 @@ namespace CRUD.WebAPI.Interfaces
             this.cacheRepository = cacheRepository;
         }
 
-        public async Task<IReadOnlyCollection<Role>> GetAllRoles()
+        public async Task<List<Role>> GetAllRoles()
         {
-            if (cacheRepository.TryGet(getAllRolesKey, out IReadOnlyCollection<Role> result))
-            {
-                return result;
-            }
-            else
+            if (!cacheRepository.TryGet(getAllRolesKey, out List<Role> result))
             {
                 result = await roleRepository.GetAllAsync();
                 cacheRepository.Set(getAllRolesKey, result);

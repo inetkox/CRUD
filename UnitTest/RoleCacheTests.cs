@@ -1,4 +1,5 @@
-﻿using CRUD.WebAPI.Interfaces;
+﻿using CRUD.WebAPI.Controllers;
+using CRUD.WebAPI.Interfaces;
 using CRUD.WebAPI.Privilages;
 using Moq;
 
@@ -7,10 +8,10 @@ namespace UnitTest
     public class RoleCacheTests
     {
         [Fact]
-        public async Task Test()
+        public async Task GetAllRoles_Should_Return_Correct_Cache_Roles()
         {
             //Arrange
-            var roleLists = new List<Role>()
+            var roleList = new List<Role>()
             {
                 new Role
                 {
@@ -24,8 +25,14 @@ namespace UnitTest
                 }
             };
 
-            var mockRepo = new Mock<IRoleService>();
-            mockRepo.Setup(repo => repo.GetAllRoles()).ReturnsAsync(roleLists);
+            var mockRoleRepository = new Mock<IRoleRepository>();
+            var mockCacheRepository = new Mock<ICacheRepository>();
+            mockCacheRepository.Setup(repo => repo.TryGet(It.IsAny<string>(), out roleList)).Returns(true);
+            //Act
+            var service = new RoleService(mockRoleRepository.Object, mockCacheRepository.Object);
+            var result = await service.GetAllRoles();
+            //Assert
+            Assert.Equal(roleList, result);
         }
 
         public static Guid GenerateSeededGuid(int seed)

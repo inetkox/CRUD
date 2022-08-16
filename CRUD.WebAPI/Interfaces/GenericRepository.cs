@@ -36,9 +36,9 @@ namespace CRUD.WebAPI.Interfaces
             return await context.Set<T>().FindAsync(id);
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
-            if (!cacheRepository.TryGet(cacheKey, out IReadOnlyList<T> cachedList))
+            if (!cacheRepository.TryGet(cacheKey, out List<T> cachedList))
             {
                 cachedList = await context.Set<T>().ToListAsync();
                 cacheRepository.Set(cacheKey, cachedList);

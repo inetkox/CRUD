@@ -4,6 +4,6 @@ namespace CRUD.WebAPI.Interfaces
 {
     public interface IRoleService
     {
-        Task<IReadOnlyCollection<Role>> GetAllRoles();
+        Task<List<Role>> GetAllRoles();
     }
 }
