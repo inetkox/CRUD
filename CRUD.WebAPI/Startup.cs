@@ -3,6 +3,9 @@ using CRUD.WebAPI.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using System.Text.Json.Serialization;
+
 namespace CRUD.WebAPI
 {
     public class Startup
@@ -20,8 +23,8 @@ namespace CRUD.WebAPI
         {
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            builder.Services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlServer(connectionString));
 
             builder.Services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
@@ -37,7 +40,13 @@ namespace CRUD.WebAPI
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
             builder.Services.AddTransient<IPermissionRepository, PermissionRepository>();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                });
+                    
 
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();

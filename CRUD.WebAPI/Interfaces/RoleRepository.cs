@@ -11,6 +11,7 @@ namespace CRUD.WebAPI.Interfaces
         public RoleRepository(ApplicationDbContext context, ICacheRepository cacheRepository) : base(context, cacheRepository)
         {
             roles = context.Set<Role>();
+            roles.Include(x => x.Permissions).ToList();
         }
     }
 }

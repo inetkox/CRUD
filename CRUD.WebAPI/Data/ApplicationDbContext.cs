@@ -1,5 +1,4 @@
-﻿
-using CRUD.WebAPI.Privilages;
+﻿using CRUD.WebAPI.Privilages;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +9,7 @@ namespace CRUD.WebAPI.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
         }
 
         public DbSet<Permission> Permissions { get; set; } = null!;
