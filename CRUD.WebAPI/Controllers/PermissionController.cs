@@ -1,5 +1,7 @@
-﻿using CRUD.WebAPI.Interfaces;
+﻿using CRUD.WebAPI.Authorize;
+using CRUD.WebAPI.Interfaces;
 using CRUD.WebAPI.Privilages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRUD.WebAPI.Controllers
@@ -30,7 +32,7 @@ namespace CRUD.WebAPI.Controllers
                 return NotFound();
             }
 
-            return permission;
+            return Ok(permission);
         }
 
         [HttpPost]

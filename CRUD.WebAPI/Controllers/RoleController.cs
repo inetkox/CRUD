@@ -1,4 +1,5 @@
-﻿using CRUD.WebAPI.Interfaces;
+﻿using CRUD.WebAPI.Authorize;
+using CRUD.WebAPI.Interfaces;
 using CRUD.WebAPI.Privilages;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace CRUD.WebAPI.Controllers
             this.roleRepository = roleRepository;
         }
 
+        [CustomAuthorize("Admin")]
         [HttpGet]
         public async Task<IReadOnlyList<Role>> GetAllRoles()
         {
@@ -30,7 +32,7 @@ namespace CRUD.WebAPI.Controllers
                 return NotFound();
             }
 
-            return role;
+            return Ok(role);
         }
 
         [HttpPost]
