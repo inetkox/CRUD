@@ -1,8 +1,10 @@
 ﻿using CRUD.WebAPI.Authorize;
+using CRUD.WebAPI.Enums;
 using CRUD.WebAPI.Interfaces;
 using CRUD.WebAPI.Privilages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static CRUD.WebAPI.Enums.PermissionEnum;
 
 namespace CRUD.WebAPI.Controllers
 {
@@ -17,6 +19,7 @@ namespace CRUD.WebAPI.Controllers
             this.permissionRepository = permissionRepository;
         }
 
+        [CustomAuthorize(PermissionsEnums.GetAll)]
         [HttpGet]
         public async Task<IReadOnlyList<Permission>> GetAllPermissions()
         {

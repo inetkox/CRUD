@@ -3,7 +3,6 @@ using CRUD.WebAPI.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
 namespace CRUD.WebAPI

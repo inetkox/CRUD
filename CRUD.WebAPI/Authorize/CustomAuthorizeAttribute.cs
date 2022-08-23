@@ -1,17 +1,18 @@
 ﻿using CRUD.WebAPI.Data;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using CRUD.WebAPI.Enums;
+using CRUD.WebAPI.Privilages;
 
 namespace CRUD.WebAPI.Authorize
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        public string CurrentPermissionName;
-        public CustomAuthorizeAttribute(string currentPermissionName)
+        private readonly PermissionEnum.PermissionsEnums _permissionEnum;
+        public CustomAuthorizeAttribute(PermissionEnum.PermissionsEnums permissionEnum)
         {
-            CurrentPermissionName = currentPermissionName;
+            _permissionEnum = permissionEnum;
         }
 
         public void OnAuthorization(AuthorizationFilterContext filterContext)
@@ -20,9 +21,13 @@ namespace CRUD.WebAPI.Authorize
                 .RequestServices
                 .GetService(typeof(ApplicationDbContext)) as ApplicationDbContext;
 
-            if (filterContext != null)
+            /*if (filterContext != null)
             {
-                var users = context?.Permissions.Where(c => c.PermissionName == CurrentPermissionName).FirstOrDefault();
+                var permission = filterContext.HttpContext.User;
+
+                var name = _permissionEnum.ToString();
+
+                var users = context?.Permissions.Where(c => c.PermissionName == name).FirstOrDefault();
 
                 if (string.IsNullOrEmpty(users?.PermissionName?.ToString()))
                 {
@@ -30,7 +35,7 @@ namespace CRUD.WebAPI.Authorize
                 }
 
                 return;
-            }
+            }*/
         }
     }
 }
